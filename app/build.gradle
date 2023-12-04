@@ -17,11 +17,6 @@ repositories {
 }
 
 dependencies {
-    // Use JUnit Jupiter for testing.
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
-
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
     // Spring dependencies
     // https://mvnrepository.com/   /org.springframework/spring-web
     implementation group: 'org.springframework', name: 'spring-web', version: '6.1.0'
@@ -38,8 +33,27 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.2.0' 
 
+   // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '3.2.0'
+
+    // https://mvnrepository.com/artifact/org.springframework.data/spring-data-jpa
+    implementation group: 'org.springframework.data', name: 'spring-data-jpa', version: '3.2.0'
+
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '3.2.0'
+
+    // https://mvnrepository.com/artifact/org.springframework.security/spring-security-core
+    implementation group: 'org.springframework.security', name: 'spring-security-core', version: '6.2.0'
+
+    // https://mvnrepository.com/artifact/org.postgresql/postgresql
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.6.0'
+
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:32.1.1-jre'  
+
+    // Lombok dependency
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+	annotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
