@@ -7,7 +7,7 @@ import java.util.Optional;
 import backend.model.Users;
 
 @Repository
-public interface UsersRepository extends JpaRepository<Users, Long> {
+public interface UserRepository extends JpaRepository<Users, Long> {
     Optional<Users> findByName(String username);
     boolean existsByName(String username);
 }

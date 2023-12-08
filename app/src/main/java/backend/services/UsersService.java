@@ -7,7 +7,7 @@ import backend.DTO.UsersCreatedDTO;
 import backend.DTO.UsersDTO;
 import backend.exceptions.UserAlreadyExists;
 import backend.model.Users;
-import backend.repository.UsersRepository;
+import backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 @RequiredArgsConstructor
 public class UsersService {
-    private final UsersRepository usersRepository;
+    private final UserRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
 
     public UsersCreatedDTO register(UsersDTO req) throws UserAlreadyExists {

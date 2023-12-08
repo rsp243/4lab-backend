@@ -2,7 +2,6 @@ package backend.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +15,6 @@ import lombok.Data;
 
 @RestController
 @RequestMapping(path = "/api/v1/users", produces = { "application/json" })
-// @RequiredArgsConstructor
 @Data
 public class UsersController {
 
@@ -27,11 +25,6 @@ public class UsersController {
     // // usersList.put("1", new Users());
     // return usersList.get("1");
     // }
-
-    @GetMapping("/login")
-    public String login() {
-        return "Logined successfully";
-    }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UsersDTO req) {

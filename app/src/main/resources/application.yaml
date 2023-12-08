@@ -8,3 +8,8 @@ spring:
         database: postgresql
         database-platform: org.hibernate.dialect.PostgreSQLDialect
         show-sql: true
+    security:
+        filter:
+            orger: 10
+    jwt:
+        secret: 14ae60b1b1bcd1c223857460f0d25fcbd3fbf80f
