@@ -8,10 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import backend.DTO.PointsCreatedDTO;
 import backend.DTO.PointsDTO;
+import backend.DTO.PointsDeletedDTO;
 import backend.DTO.TokenDTO;
 import backend.DTO.UsersDTO;
 import backend.exceptions.ApiException;
-import backend.model.validators.PointsValidator;
+import backend.model.validators.TokenValidator;
 import backend.model.validators.UsersValidator;
 import backend.security.JwtUtils;
 import backend.services.PointsService;
@@ -27,10 +28,21 @@ public class PointController {
 
     @PostMapping(path = "/add")
     public ResponseEntity<?> addPoint(@RequestBody PointsDTO req) {
-        PointsValidator validator = new PointsValidator(jwtUtils);
+        TokenValidator validator = new TokenValidator(jwtUtils).validateToken(req);
         
         return ControllerExecutor.execute(validator, () -> {
             PointsCreatedDTO pointDTO = pointsService.addPoint(req);
+            return ResponseEntity.ok().body(pointDTO);
+        });
+    }
+
+    @PostMapping(path = "/delete")
+    public ResponseEntity<?> deleteAllPoints(@RequestBody TokenDTO req) {
+        TokenValidator validator = new TokenValidator(jwtUtils).validateToken(req.getToken());
+        
+        return ControllerExecutor.execute(validator, () -> {
+            PointsDeletedDTO pointDTO = pointsService.deleteAllPoints(
+                pointsService.getAllPointsCreatedByUser(req));
             return ResponseEntity.ok().body(pointDTO);
         });
     }

@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 
 import backend.DTO.PointsCreatedDTO;
 import backend.DTO.PointsDTO;
+import backend.DTO.PointsDeletedDTO;
+import backend.DTO.TokenDTO;
 import backend.exceptions.DoesNotExistException;
 import backend.exceptions.TokenNotPassedException;
 import backend.model.Points;
@@ -17,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.LinkedList;
 
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
@@ -30,30 +34,15 @@ public class PointsService {
     // private final AuthentificatedMap authentificatedMap;
     private final JwtUtils jwtUtils;
     private final UserRepository userRepository;
+    private final AuthService authService;
 
-    public PointsCreatedDTO addPoint(PointsDTO req) throws DoesNotExistException, TokenNotPassedException {
-        // if (!authentificatedMap.isAuthentificated(req.getUserToken())) 
-        //     throw new UserIsNotAuthentificated("User with passed token is not authorized.");
-
+    public PointsCreatedDTO addPoint(PointsDTO req) throws DoesNotExistException {
+        final long userId = authService.getUserIdFromToken(req.getToken().getToken());
+        
         final long startExec = System.nanoTime();
         final boolean result = getResult(req.getX(), req.getY(), req.getR());
         final long endExec = System.nanoTime();
         final int executionTime = (int) (endExec - startExec);
-
-        log.error(req.toString());
-
-        if (req.getUserToken() == null)
-            throw new TokenNotPassedException("Token was not passed to request.");
-        Claims userClaims = jwtUtils.getClaims(req.getUserToken().getToken());
-        final String username = userClaims.get("sub", String.class);
-        
-        if (!userRepository.existsByName(username)) {
-            throw new DoesNotExistException(username);
-        }
-
-        Users userEntity = userRepository.findByName(username)
-            .orElseThrow(() -> new DoesNotExistException(username));
-        final long userId = userEntity.getId();
 
         Points point = Points.builder()
                 .x(req.getX())
@@ -104,11 +93,19 @@ public class PointsService {
         return validateXYR(x, y, r) && checkArea(x, y, r);
     }
 
-    // public PointRepository getPointsRepository() {
-    //     return pointsRepository;
-    // }
+    public void deletePoint(long pointId) {
+        pointsRepository.deleteById(pointId);
+    }
 
-    // public AuthentificatedMap getAuthentificatedMap() {
-    //     return authentificatedMap;
-    // }
+    public List<Points> getAllPointsCreatedByUser(TokenDTO req) throws DoesNotExistException {
+        final long userId = authService.getUserIdFromToken(req.getToken());
+        List<Points> pointsList = pointsRepository.getAllByUserId(userId);
+        return pointsList;
+    }
+
+    public PointsDeletedDTO deleteAllPoints(List<Points> pointsList) {
+        pointsRepository.deleteAll(pointsList);
+
+        return new PointsDeletedDTO("Deleted successfully.");
+    } 
 }

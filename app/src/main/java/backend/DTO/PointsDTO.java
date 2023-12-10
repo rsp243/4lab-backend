@@ -7,5 +7,5 @@ public class PointsDTO {
     private float x;
     private float y;
     private float r;
-    private TokenDTO userToken;
+    private TokenDTO token;
 }

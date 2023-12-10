@@ -11,6 +11,7 @@ import backend.exceptions.WrongPasswordException;
 import backend.model.Users;
 import backend.repository.UserRepository;
 import backend.security.JwtUtils;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,5 +38,19 @@ public class AuthService {
         TokenDTO token = new TokenDTO(jwtUtils.generateAccessToken(userEntity));
         // authMap.addNewHash(userEntity, token);
         return token;
+    }
+
+    public long getUserIdFromToken(String token) throws DoesNotExistException {
+        Claims userClaims = jwtUtils.getClaims(token);
+        final String username = userClaims.get("sub", String.class);
+        
+        if (!usersRepository.existsByName(username)) {
+            throw new DoesNotExistException(username);
+        }
+
+        Users userEntity = usersRepository.findByName(username)
+            .orElseThrow(() -> new DoesNotExistException(username));
+        final long userId = userEntity.getId();
+        return userId;
     }
 }
