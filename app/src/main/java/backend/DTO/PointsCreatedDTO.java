@@ -10,5 +10,6 @@ public class PointsCreatedDTO {
     private float y;
     private float r;
     private boolean isHit;
-    // private long userId;
+    private String currentTime;
+    private int executionTime;
 }

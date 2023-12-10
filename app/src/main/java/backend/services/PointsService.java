@@ -67,7 +67,14 @@ public class PointsService {
         
         
         pointsRepository.save(point);
-        return new PointsCreatedDTO(point.getX(), point.getY(), point.getR(), point.isHit() /*, point.getUserId() */ );
+        return new PointsCreatedDTO(
+            point.getX(),
+            point.getY(),
+            point.getR(),
+            point.isHit(),
+            point.getFormattedCurrentTime(),
+            point.getExecutionTime()
+            /*, point.getUserId() */ );
     }
 
     public boolean checkArea(float xValue, float yValue, float rValue) {
