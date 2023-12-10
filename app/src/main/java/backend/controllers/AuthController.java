@@ -20,9 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RequestMapping(path = "/api/v1/auth", produces = { "application/json" })
 public class AuthController {
-    JwtUtils jwtUtils;
-
-    // private final AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
 
     private final AuthService authService;
 

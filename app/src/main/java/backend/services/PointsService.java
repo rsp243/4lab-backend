@@ -4,10 +4,18 @@ import org.springframework.stereotype.Service;
 
 import backend.DTO.PointsCreatedDTO;
 import backend.DTO.PointsDTO;
-import backend.exceptions.UserIsNotAuthentificated;
+import backend.exceptions.DoesNotExistException;
+import backend.exceptions.TokenNotPassedException;
 import backend.model.Points;
+import backend.model.Users;
+import backend.repository.PointsRepository;
+import backend.repository.UserRepository;
+import backend.security.JwtUtils;
+import io.jsonwebtoken.Claims;
 // import backend.repository.PointRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import java.time.LocalDateTime;
 
 import static java.lang.Math.pow;
@@ -15,12 +23,15 @@ import static java.lang.Math.sqrt;
 import static java.lang.Math.abs;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class PointsService {
-    // private final PointRepository pointsRepository;
+    private final PointsRepository pointsRepository;
     // private final AuthentificatedMap authentificatedMap;
+    private final JwtUtils jwtUtils;
+    private final UserRepository userRepository;
 
-    public PointsCreatedDTO register(PointsDTO req) throws UserIsNotAuthentificated {
+    public PointsCreatedDTO addPoint(PointsDTO req) throws DoesNotExistException, TokenNotPassedException {
         // if (!authentificatedMap.isAuthentificated(req.getUserToken())) 
         //     throw new UserIsNotAuthentificated("User with passed token is not authorized.");
 
@@ -29,6 +40,21 @@ public class PointsService {
         final long endExec = System.nanoTime();
         final int executionTime = (int) (endExec - startExec);
 
+        log.error(req.toString());
+
+        if (req.getUserToken() == null)
+            throw new TokenNotPassedException("Token was not passed to request.");
+        Claims userClaims = jwtUtils.getClaims(req.getUserToken().getToken());
+        final String username = userClaims.get("sub", String.class);
+        
+        if (!userRepository.existsByName(username)) {
+            throw new DoesNotExistException(username);
+        }
+
+        Users userEntity = userRepository.findByName(username)
+            .orElseThrow(() -> new DoesNotExistException(username));
+        final long userId = userEntity.getId();
+
         Points point = Points.builder()
                 .x(req.getX())
                 .y(req.getY())
@@ -36,10 +62,11 @@ public class PointsService {
                 .isHit(result)
                 .currentTime(LocalDateTime.now())
                 .executionTime(executionTime)
-                // .userId(null)
+                .userId(userId)
                 .build();
-
-        // pointsRepository.save(point);
+        
+        
+        pointsRepository.save(point);
         return new PointsCreatedDTO(point.getX(), point.getY(), point.getR(), point.isHit() /*, point.getUserId() */ );
     }
 

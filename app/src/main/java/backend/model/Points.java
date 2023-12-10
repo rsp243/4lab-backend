@@ -38,8 +38,9 @@ public class Points {
     @Column(name = "executiontime")
     private int executionTime;
 
-    // @OneToMany(mappedBy = "users")
-    // private Long userId;
+    @Column(name = "userid")
+    private long userId;
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
 
     public String getFormattedCurrentTime() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");

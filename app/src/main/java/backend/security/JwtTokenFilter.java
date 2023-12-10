@@ -1,48 +1,70 @@
-// package backend.security;
+package backend.security;
 
-// import java.io.IOException;
+import java.io.IOException;
 
-// import org.springframework.http.HttpHeaders;
-// import org.springframework.security.core.userdetails.UserDetails;
-// import org.springframework.stereotype.Component;
-// import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-// import backend.repository.UserRepository;
-// import jakarta.servlet.FilterChain;
-// import jakarta.servlet.ServletException;
-// import jakarta.servlet.http.HttpServletRequest;
-// import jakarta.servlet.http.HttpServletResponse;
-// import lombok.AllArgsConstructor;
-// import lombok.RequiredArgsConstructor;
+import backend.repository.UserRepository;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-// @Component
-// @AllArgsConstructor
-// public class JwtTokenFilter extends OncePerRequestFilter {
-//     private final UserRepository userRepository;
-//     private final JwtUtils jwtUtils;
+@AllArgsConstructor
+public class JwtTokenFilter extends GenericFilterBean {
+    private final UserRepository userRepository;
+    private final JwtUtils jwtUtils;
 
-//     private final String authHeader = "Bearer ";
+    private final String authHeader = "Bearer ";
 
-//     @Override
-//     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse resp, FilterChain filterChain)
-//             throws ServletException, IOException {
-//         final String header = req.getHeader(HttpHeaders.AUTHORIZATION);
-//         // header validation
-//         if (header.isEmpty() || !header.startsWith(authHeader)) {
-//             filterChain.doFilter(req, resp);
-//             return;
-//         }
-
-//         // get jwt token
-//         final String jwtToken = header.split(" ")[1].trim();
-//         // jwt token validation
-//         // if (!jwtUtils.isTokenValid(jwtToken)) {
-//         //     filterChain.doFilter(req, resp);
-//         //     return;
-//         // }
+    // protected void doFilterInternal(HttpServletRequest req, HttpServletResponse resp, FilterChain filterChain)
+    //         throws ServletException, IOException {
+    //     final String header = req.getHeader(HttpHeaders.AUTHORIZATION);
         
-//         // UserDetails userDetails = userRepository.findByName(jwtUtils.getUsername(jwtToken));
+    //     // header validation
+    //     if (header == null || header.isEmpty() || !header.startsWith(authHeader)) {
+    //         filterChain.doFilter(req, resp);
+    //         return;
+    //     }
 
-//     }
-    
-// }
+    //     // get jwt token
+    //     final String jwtToken = header.split(" ")[1].trim();
+    //     // jwt token validation
+    //     if (!jwtUtils.validateAccessToken(jwtToken)) {
+    //         filterChain.doFilter(req, resp);
+    //         return;
+    //     }
+        
+    //     // UserDetails userDetails = userRepository.findByName(jwtUtils.getUsername(jwtToken));
+    // }
+
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain filterChain)
+            throws IOException, ServletException {
+        final String header = ((HttpServletRequest) req).getHeader(HttpHeaders.AUTHORIZATION);
+        
+        // header validation
+        if (header == null || header.isEmpty() || !header.startsWith(authHeader)) {
+            filterChain.doFilter(req, resp);
+            return;
+        }
+
+        // get jwt token
+        final String jwtToken = header.split(" ")[1].trim();
+        // jwt token validation
+        if (!jwtUtils.validateAccessToken(jwtToken)) {
+            filterChain.doFilter(req, resp);
+            return;
+        }
+    }    
+}
