@@ -18,6 +18,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import backend.model.Users;
 import backend.repository.UserRepository;
@@ -44,18 +46,15 @@ public class SecurityConfiguration {
                 .build();
     }
 
-    // @Bean
-    // public UserDetailsService userDetailsService() {
-    //     return name -> {
-    //         Users user;
-    //         Optional<Users> userCont = userRepository.findByName(name);
-    //         if (userCont.isPresent()) {
-    //             new UsernameNotFoundException(String.format("User '%s' not found in system", name));
-    //         }
-    //         user = userCont.get();
-    //         return new CustomUserDetails(user);
-    //     };
-    // }
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**").allowedOrigins("http://localhost:3000");
+            }
+        };
+    }
 
     @Bean
     public JwtUtils getJwtUtils() {
