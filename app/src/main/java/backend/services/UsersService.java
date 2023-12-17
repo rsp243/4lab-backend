@@ -29,6 +29,6 @@ public class UsersService {
                 .build();
 
         usersRepository.save(user);
-        return new UsersCreatedDTO(user.getName());
+        return new UsersCreatedDTO("OK", user.getName());
     }
 }

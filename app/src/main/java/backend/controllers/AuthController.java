@@ -28,7 +28,7 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody UsersDTO req) {
         UsersValidator validator = new UsersValidator();
         validator.validateName(req).validatePassword(req);
-        
+
         return ControllerExecutor.execute(validator, () -> {
             TokenDTO tokenDTO;
             try {
@@ -39,14 +39,4 @@ public class AuthController {
             return ResponseEntity.ok().body(tokenDTO);
         });
     }
-
-    // @PostMapping("/refresh")
-    // public ResponseEntity<?> refreshToken(@RequestHeader HttpHeaders reqHeaders)
-    // {
-    // return ControllerExecutor.execute(null, () -> {
-    // var tokenDTO = authService.refreshToken(reqHeaders);
-    // return ResponseEntity.ok().body(tokenDTO);
-    // });
-    // }
-
 }

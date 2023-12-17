@@ -16,5 +16,6 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TokenDTO {
+    private String status;
     private String token;
 }

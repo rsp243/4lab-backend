@@ -25,25 +25,21 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     public TokenDTO login(UsersDTO req) throws DoesNotExistException, ApiException, WrongPasswordException {
-        // authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-        //         req.getName(), req.getPassword()));
-
         Users userEntity = usersRepository.findByName(req.getName())
                 .orElseThrow(() -> new DoesNotExistException(req.getName()));
-        
+
         if (!passwordEncoder.matches(req.getPassword(), userEntity.getPassword()))
             throw new WrongPasswordException(req.getName());
-            
+
         // CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
-        TokenDTO token = new TokenDTO(jwtUtils.generateAccessToken(userEntity));
-        // authMap.addNewHash(userEntity, token);
+        TokenDTO token = new TokenDTO("OK", jwtUtils.generateAccessToken(userEntity));
         return token;
     }
 
     public long getUserIdFromToken(String token) throws DoesNotExistException {
         Claims userClaims = jwtUtils.getClaims(token);
         final String username = userClaims.get("sub", String.class);
-        
+
         if (!usersRepository.existsByName(username)) {
             throw new DoesNotExistException(username);
         }
