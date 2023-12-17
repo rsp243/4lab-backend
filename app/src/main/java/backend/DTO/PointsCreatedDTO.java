@@ -9,7 +9,7 @@ public class PointsCreatedDTO {
     private float x;
     private float y;
     private float r;
-    private boolean isHit;
+    private String isHit;
     private String currentTime;
     private int executionTime;
 }

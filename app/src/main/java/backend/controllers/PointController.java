@@ -35,9 +35,10 @@ public class PointController {
 
         return ControllerExecutor.execute(validator, () -> {
             List<Points> allPoints = pointsService.getAllPointsCreatedByUser(req);
-            List<PointsCreatedDTO> result = new LinkedList();
-            for (int i = 0; i < allPoints.length(); i++) {
-                result.push(allPoints[i].getCreatedPoint(allPoints[i]));
+            List<PointsCreatedDTO> result = new LinkedList<PointsCreatedDTO>();
+            for (int i = 0; i < allPoints.size(); i++) {
+                Points iPoint = allPoints.get(i);
+                result.add(iPoint.getCreatedPoint(iPoint));
             }
             return ResponseEntity.ok().body(result);
         });
