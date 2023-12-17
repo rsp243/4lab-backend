@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import backend.model.Users;
+import io.jsonwebtoken.ClaimJwtException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -22,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.nio.charset.StandardCharsets;
 
 @Component
-@Slf4j
 public class JwtUtils {
     @Value("${spring.jwt.secret}")
     private String jwtSecret;
@@ -48,16 +48,9 @@ public class JwtUtils {
                 .build()
                 .parseClaimsJws(jwtToken);
             return true;
-        } catch (ExpiredJwtException expEx) {
-            log.error("Token expired", expEx);
-        } catch (UnsupportedJwtException unsEx) {
-            log.error("Unsupported jwt", unsEx);
-        } catch (MalformedJwtException mjEx) {
-            log.error("Malformed jwt", mjEx);
-        } catch (Exception e) {
-            log.error("invalid token", e);
+        } catch (ClaimJwtException e) {
+            throw e;
         }
-        return false;
     }
 
     public Claims getClaims(String jwtToken) {

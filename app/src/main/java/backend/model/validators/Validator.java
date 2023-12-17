@@ -19,6 +19,10 @@ public class Validator {
     }
 
     public String getDescription() {
-        return violations.toString();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < violations.size(); i++) {
+            stringBuilder.append(violations.get(i).getMessageError() + " ");
+        }
+        return stringBuilder.toString();
     }
 }

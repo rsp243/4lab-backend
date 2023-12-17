@@ -2,6 +2,9 @@ package backend.model.validators;
 
 import backend.DTO.PointsDTO;
 import backend.security.JwtUtils;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -17,8 +20,16 @@ public class TokenValidator extends Validator {
     }
 
     public TokenValidator validateToken(String token) {
-        if (!jwtUtils.validateAccessToken(token)) {
-            this.addViolation("token", "Passed token is invalid.");
+        try {
+            jwtUtils.validateAccessToken(token);
+        } catch (ExpiredJwtException expEx) {
+            this.addViolation("token", "Token has expired");
+        } catch (UnsupportedJwtException unsEx) {
+            this.addViolation("token", "Unsupported JWT");
+        } catch (MalformedJwtException mjEx) {
+            this.addViolation("token", "Malformed JWT");
+        } catch (Exception e) {
+            this.addViolation("token", "Invalid Token");
         }
         return this;
     }
