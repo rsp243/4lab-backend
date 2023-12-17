@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import backend.model.Points;
 import backend.DTO.PointsCreatedDTO;
 import backend.DTO.PointsDTO;
 import backend.DTO.PointsDeletedDTO;
