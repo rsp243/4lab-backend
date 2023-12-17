@@ -32,7 +32,7 @@ public class AuthService {
             throw new WrongPasswordException(req.getName());
 
         // CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
-        TokenDTO token = new TokenDTO("OK", jwtUtils.generateAccessToken(userEntity));
+        TokenDTO token = new TokenDTO(jwtUtils.generateAccessToken(userEntity));
         return token;
     }
 
