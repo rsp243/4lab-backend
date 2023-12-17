@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.LinkedList;
 import backend.model.Points;
 import backend.DTO.PointsCreatedDTO;
 import backend.DTO.PointsDTO;
@@ -33,7 +34,11 @@ public class PointController {
         TokenValidator validator = new TokenValidator(jwtUtils).validateToken(req.getToken());
 
         return ControllerExecutor.execute(validator, () -> {
-            List<Points> result = pointsService.getAllPointsCreatedByUser(req);
+            List<Points> allPoints = pointsService.getAllPointsCreatedByUser(req);
+            List<PointsCreatedDTO> result = new LinkedList();
+            for (int i = 0; i < allPoints.length(); i++) {
+                result.push(allPoints[i].getCreatedPoint(allPoints[i]))
+            }
             return ResponseEntity.ok().body(result);
         });
     }

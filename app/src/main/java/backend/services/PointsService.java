@@ -14,7 +14,6 @@ import backend.repository.PointsRepository;
 import backend.repository.UserRepository;
 import backend.security.JwtUtils;
 import io.jsonwebtoken.Claims;
-// import backend.repository.PointRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -56,14 +55,7 @@ public class PointsService {
 
 
         pointsRepository.save(point);
-        return new PointsCreatedDTO(
-            point.getX(),
-            point.getY(),
-            point.getR(),
-            point.isHit(),
-            point.getFormattedCurrentTime(),
-            point.getExecutionTime()
-            /*, point.getUserId() */ );
+        return point.getCreatedPoint(point);
     }
 
     public boolean checkArea(float xValue, float yValue, float rValue) {

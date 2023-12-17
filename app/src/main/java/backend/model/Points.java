@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import backend.DTO.PointsCreatedDTO;
 
 import java.time.format.DateTimeFormatter;
 
@@ -49,5 +50,16 @@ public class Points {
 
     public String getFormattedIsHit() {
         return isHit ? "HIT" : "MISS";
+    }
+
+    public PointsCreatedDTO getCreatedPoint(Points point) {
+        return new PointsCreatedDTO(
+            point.getX(),
+            point.getY(),
+            point.getR(),
+            point.getFormattedIsHit(),
+            point.getFormattedCurrentTime(),
+            point.getExecutionTime()
+        );
     }
 }
