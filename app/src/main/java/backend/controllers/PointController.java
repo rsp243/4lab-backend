@@ -31,7 +31,7 @@ public class PointController {
         TokenValidator validator = new TokenValidator(jwtUtils).validateToken(req);
 
         return ControllerExecutor.execute(validator, () -> {
-            List<Points> result = pointsService.getAllPointsCreatedByUser();
+            List<Points> result = pointsService.getAllPointsCreatedByUser(req);
             return ResponseEntity.ok().body(result);
         });
     }
