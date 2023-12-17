@@ -30,7 +30,7 @@ public class PointController {
 
     @PostMapping(path = "/getAll")
     public ResponseEntity<?> getAll(@RequestBody TokenDTO req) {
-        TokenValidator validator = new TokenValidator(jwtUtils).validateToken(req);
+        TokenValidator validator = new TokenValidator(jwtUtils).validateToken(req.getToken());
 
         return ControllerExecutor.execute(validator, () -> {
             List<Points> result = pointsService.getAllPointsCreatedByUser(req);
