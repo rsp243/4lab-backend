@@ -22,14 +22,24 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @RequestMapping(path = "/api/v1/point", produces = { "application/json" })
 public class PointController {
-    
+
     private final JwtUtils jwtUtils;
     private final PointsService pointsService;
+
+    @PostMapping(path = "/getAll")
+    public ResponseEntity<?> getAll(@RequestBody TokenDTO req) {
+        TokenValidator validator = new TokenValidator(jwtUtils).validateToken(req);
+
+        return ControllerExecutor.execute(validator, () -> {
+            List<Points> result = pointsService.getAllPointsCreatedByUser();
+            return ResponseEntity.ok().body(result);
+        });
+    }
 
     @PostMapping(path = "/add")
     public ResponseEntity<?> addPoint(@RequestBody PointsDTO req) {
         TokenValidator validator = new TokenValidator(jwtUtils).validateToken(req);
-        
+
         return ControllerExecutor.execute(validator, () -> {
             PointsCreatedDTO pointDTO = pointsService.addPoint(req);
             return ResponseEntity.ok().body(pointDTO);
@@ -39,7 +49,7 @@ public class PointController {
     @PostMapping(path = "/delete")
     public ResponseEntity<?> deleteAllPoints(@RequestBody TokenDTO req) {
         TokenValidator validator = new TokenValidator(jwtUtils).validateToken(req.getToken());
-        
+
         return ControllerExecutor.execute(validator, () -> {
             PointsDeletedDTO pointDTO = pointsService.deleteAllPoints(
                 pointsService.getAllPointsCreatedByUser(req));

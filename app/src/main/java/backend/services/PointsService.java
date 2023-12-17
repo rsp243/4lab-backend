@@ -38,7 +38,7 @@ public class PointsService {
 
     public PointsCreatedDTO addPoint(PointsDTO req) throws DoesNotExistException {
         final long userId = authService.getUserIdFromToken(req.getToken().getToken());
-        
+
         final long startExec = System.nanoTime();
         final boolean result = getResult(req.getX(), req.getY(), req.getR());
         final long endExec = System.nanoTime();
@@ -53,8 +53,8 @@ public class PointsService {
                 .executionTime(executionTime)
                 .userId(userId)
                 .build();
-        
-        
+
+
         pointsRepository.save(point);
         return new PointsCreatedDTO(
             point.getX(),
@@ -107,5 +107,5 @@ public class PointsService {
         pointsRepository.deleteAll(pointsList);
 
         return new PointsDeletedDTO("Deleted successfully.");
-    } 
+    }
 }
