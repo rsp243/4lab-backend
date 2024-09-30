@@ -15,7 +15,6 @@ public class ControllerExecutor {
             if (validator.hasViolations()) {
                 throw new ApiException(HttpStatus.UNPROCESSABLE_ENTITY, validator.getDescription());
             }
-
             try {
                 return controllerFunc.run();
             // } catch (AuthenticationException ex) {

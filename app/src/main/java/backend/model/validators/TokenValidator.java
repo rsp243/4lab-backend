@@ -1,6 +1,7 @@
 package backend.model.validators;
 
-import backend.DTO.PointsDTO;
+import backend.DTO.PersonDTO;
+import backend.DTO.TokenizedDTO;
 import backend.security.JwtUtils;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -11,7 +12,7 @@ import lombok.AllArgsConstructor;
 public class TokenValidator extends Validator {
     private final JwtUtils jwtUtils;
 
-    public TokenValidator validateToken(PointsDTO req) {
+    public TokenValidator validateToken(TokenizedDTO req) {
         if (req.getToken() == null) {
             this.addViolation("token", "Token was not passed.");
             return this;
